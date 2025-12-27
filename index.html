@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Message for Hudgi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Dancing+Script:wght@500;700&display=swap');
+
+        :root { --pink: #ff4d94; --bg-dark: #0f0014; }
+
+        body {
+            background: radial-gradient(circle at center, #2e003e 0%, #000000 100%);
+            color: white; font-family: 'Poppins', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        .container { width: 90%; max-width: 380px; text-align: center; animation: fadeIn 0.8s ease; }
+        .hidden { display: none; }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px; border-radius: 20px;
+            border: 1px solid rgba(255, 77, 148, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        input {
+            width: 80%; padding: 12px; margin: 10px 0;
+            border-radius: 10px; border: none; outline: none;
+            text-align: center; background: rgba(255, 255, 255, 0.9); color: #333;
+        }
+
+        .btn {
+            background: var(--pink); border: none; padding: 12px 30px;
+            border-radius: 50px; color: white; font-weight: bold;
+            cursor: pointer; margin-top: 20px; box-shadow: 0 5px 20px rgba(255, 77, 148, 0.4);
+            transition: 0.3s;
+        }
+        .btn:hover { transform: scale(1.05); }
+
+        .note-card { 
+            background: #fff0f5; color: #444; padding: 25px; 
+            border-radius: 20px 20px 20px 5px; text-align: center; 
+            line-height: 1.6; 
+            font-family: 'Dancing Script', cursive; 
+            font-size: 2rem; 
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+        }
+
+        .progress-bg { width: 100%; background: #222; border-radius: 10px; height: 15px; margin: 20px 0; }
+        .progress-fill { width: 0%; height: 100%; background: var(--pink); border-radius: 10px; transition: width 0.1s linear; }
+        .reveal-bar {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 77, 148, 0.3);
+            padding: 15px; margin: 10px 0; border-radius: 15px; cursor: pointer; transition: 0.3s; display: flex; align-items: center;
+        }
+        .heart-icon { margin-right: 15px; color: var(--pink); }
+
+        .heart-particle { position: fixed; bottom: -50px; color: var(--pink); animation: floatUp 4s linear forwards; z-index: -1; }
+        @keyframes floatUp { to { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <video id="bgMusic" loop style="display:none;">
+        <source src="https://files.catbox.moe/c9qkmm.webm" type="video/webm">
+    </video>
+
+    <div id="scr0" class="container">
+        <div class="login-box">
+            <h2 style="font-family: 'Dancing Script'; font-size: 2.5rem; margin-top: 0;">Login</h2>
+            <input type="text" id="user" placeholder="Username">
+            <input type="password" id="pass" placeholder="Password">
+            <button class="btn" onclick="checkLogin()">Unlock</button>
+            <p id="error" style="color: var(--pink); font-size: 0.8rem; margin-top: 10px;"></p>
+        </div>
+    </div>
+
+    <div id="scr1" class="container hidden">
+        <h1 style="font-family: 'Dancing Script'; font-size: 3.5rem;">Hey Hudgi</h1>
+        <p>I made something special just for you.</p>
+        <button class="btn" onclick="next(1)">Open My Heart 💖</button>
+    </div>
+
+    <div id="scr2" class="container hidden">
+        <h3>Measuring your cuteness...</h3>
+        <div class="progress-bg"><div id="bar" class="progress-fill"></div></div>
+        <h2 id="num">0%</h2>
+        <p id="msg" style="color: var(--pink); font-weight: bold; height: 20px;"></p>
+    </div>
+
+    <div id="scr3" class="container hidden">
+        <h3 style="margin-bottom: 20px;">Just for you, Hudgi</h3>
+        <div class="reveal-bar" onclick="reveal(this, 'You look absolutely adorable ✨')">
+            <span class="heart-icon">❤️</span> <span class="txt">Tap to reveal</span>
+        </div>
+        <div class="reveal-bar" onclick="reveal(this, 'You have the sweetest vibe 🍬')">
+            <span class="heart-icon">❤️</span> <span class="txt">Tap to reveal</span>
+        </div>
+        <div class="reveal-bar" onclick="reveal(this, 'You make things feel lighter ☁️')">
+            <span class="heart-icon">❤️</span> <span class="txt">Tap to reveal</span>
+        </div>
+        <div class="reveal-bar" onclick="reveal(this, 'You are naturally charming 🌸')">
+            <span class="heart-icon">❤️</span> <span class="txt">Tap to reveal</span>
+        </div>
+        <div class="reveal-bar" onclick="reveal(this, 'You make everything more special 💖')">
+            <span class="heart-icon">❤️</span> <span class="txt">Tap to reveal</span>
+        </div>
+        <button class="btn" id="nextBtn" style="display:none;" onclick="next(3)">See more →</button>
+    </div>
+
+    <div id="scr4" class="container hidden">
+        <div class="note-card">
+            <p id="typewriter"></p>
+            <div id="gifArea" style="text-align: center; display: none; margin-top: 10px;">
+                <img src="https://media.tenor.com/g_Wsy7Sv_XAAAAAi/cute-bear.gif" width="100">
+                <br>
+                <button class="btn" onclick="next(4)">One last thing...</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scr5" class="container hidden">
+        <h1 style="font-family: 'Dancing Script'; font-size: 2.5rem; color: var(--pink);">Nanagu neenu andre thumba ishta. ❤️</h1>
+        <p>I hope this made you smile today!</p>
+    </div>
+
+    <script>
+        let revealedCount = 0;
+
+        function checkLogin() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            const music = document.getElementById('bgMusic');
+            if(u.toLowerCase() === "hudgi" && p === "@a1234") {
+                music.play().catch(e => console.log(e));
+                next(0);
+            } else {
+                document.getElementById('error').innerText = "Incorrect! Try again.";
+            }
+        }
+
+        function next(curr) {
+            document.getElementById('scr'+curr).classList.add('hidden');
+            document.getElementById('scr'+(curr+1)).classList.remove('hidden');
+            if(curr === 1) runMeter();
+            if(curr === 3) startTyping();
+        }
+
+        function runMeter() {
+            let p = 0;
+            let int = setInterval(() => {
+                p++;
+                document.getElementById('bar').style.width = (p > 100 ? 100 : p) + '%';
+                document.getElementById('num').innerText = p + '%';
+                if(p === 120) {
+                    clearInterval(int);
+                    document.getElementById('msg').innerText = "⚠️ TOO CUTE TO HANDLE!";
+                    setTimeout(() => next(2), 2000);
+                }
+            }, 50);
+        }
+
+        function reveal(el, message) {
+            if(el.classList.contains('revealed')) return;
+            el.querySelector('.txt').innerText = message;
+            el.classList.add('revealed');
+            el.style.background = "rgba(255, 77, 148, 0.2)";
+            revealedCount++;
+            if(revealedCount >= 3) document.getElementById('nextBtn').style.display = "inline-block";
+        }
+
+        function startTyping() {
+            const text = "my love";
+            let i = 0;
+            let target = document.getElementById('typewriter');
+            function type() {
+                if (i < text.length) {
+                    target.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, 150);
+                } else {
+                    document.getElementById('gifArea').style.display = 'block';
+                }
+            }
+            type();
+        }
+
+        setInterval(() => {
+            let h = document.createElement('div');
+            h.innerHTML = '❤️'; h.className = 'heart-particle';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 4000);
+        }, 400);
+    </script>
+</body>
+</html>
